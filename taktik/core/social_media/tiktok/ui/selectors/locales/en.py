@@ -754,9 +754,12 @@ STRINGS: Dict[str, List[str]] = {
     ],
     "publish_composer.publish_confirm_btn": [
         "//android.widget.Button[contains(@text, \"Publish now\")]",
+        "//android.widget.Button[contains(@text, \"Post Now\")]",
+        "//android.widget.Button[contains(@text, \"Post now\")]",
     ],
     "publish_composer.publish_confirm_dialog": [
         "//*[contains(@text, \"Publish video publicly\")]",
+        "//*[contains(@text, \"Post video publicly\")]",
     ],
     # --- publish_creation_entry ---
     # Mesure le 2026-08-30 sur 46.6.3, app en anglais, en publiant deux vrais posts texte.

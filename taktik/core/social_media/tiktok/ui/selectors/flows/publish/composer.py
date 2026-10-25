@@ -37,6 +37,8 @@ class PublishComposerSelectors:
     _post_screen_xml_markers_base: List[str] = field(default_factory=lambda: [
         ":id/g19",
         ":id/qrb",
+        ":id/h9x",
+        ":id/tjf",
     ])
 
     @property

@@ -60,11 +60,13 @@ from taktik.core.social_media.tiktok.services.publish.navigation import (
     advance_to_post_screen,
     ensure_gallery_picker_open,
     select_first_gallery_item,
+    switch_to_gallery_videos_tab,
     tap_create_button,
     tap_upload_button,
 )
 from taktik.core.social_media.tiktok.services.publish.progress import read_publish_progress
 from taktik.core.social_media.tiktok.services.publish.screen_detector import (
+    is_gallery_picker_open,
     is_post_screen,
     is_video_edit_screen,
     wait_for_tiktok_home,
@@ -245,19 +247,23 @@ class TikTokUploadWorkflow:
             time.sleep(1.0)
         self._capture("02_create")
 
-        # 7. Tap the upload entry of the camera creation panel
-        _ipc.status("navigating", "Tapping Upload/Gallery button...")
-        if not tap_upload_button(self.device, log=_ipc.log):
-            dismiss_post_popups(self.device, log=_ipc.log)
-            if handle_permission_dialog(self.device, self.device_id, log=_ipc.log):
-                time.sleep(0.8)
+        # 7. Tap the upload entry of the camera creation panel (skip if already on gallery picker)
+        if not is_gallery_picker_open(self.device):
+            _ipc.status("navigating", "Tapping Upload/Gallery button...")
             if not tap_upload_button(self.device, log=_ipc.log):
-                return self._error("upload_btn_not_found", "Upload button not found in creation panel")
-        if not ensure_gallery_picker_open(self.device, self.device_id, log=_ipc.log):
-            return self._error("gallery_not_opened", "TikTok gallery did not open after tapping Upload")
+                dismiss_post_popups(self.device, log=_ipc.log)
+                if handle_permission_dialog(self.device, self.device_id, log=_ipc.log):
+                    time.sleep(0.8)
+                if not tap_upload_button(self.device, log=_ipc.log):
+                    return self._error("upload_btn_not_found", "Upload button not found in creation panel")
+            if not ensure_gallery_picker_open(self.device, self.device_id, log=_ipc.log):
+                return self._error("gallery_not_opened", "TikTok gallery did not open after tapping Upload")
         self._capture("03_gallery")
 
-        # 8. Select the first file of the gallery
+        # 8. Switch to Videos tab if present (so no photos/screenshots are selected)
+        switch_to_gallery_videos_tab(self.device, log=_ipc.log)
+
+        # 9. Select the first file of the gallery
         _ipc.status("selecting", "Selecting media from gallery...")
         if not select_first_gallery_item(self.device, log=_ipc.log):
             return self._error("gallery_item_not_found", "Could not select media from gallery")

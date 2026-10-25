@@ -106,6 +106,20 @@ def ensure_gallery_picker_open(
     return is_gallery_picker_open(device)
 
 
+def switch_to_gallery_videos_tab(
+    device,
+    *,
+    selectors: PublishMediaPickerSelectors = PUBLISH_MEDIA_PICKER_SELECTORS,
+    log: LogFn | None = None,
+) -> bool:
+    """Switch TikTok gallery to Videos tab if present to avoid picking photos/screenshots."""
+    if hasattr(selectors, "gallery_videos_tab"):
+        if tap_element(device, selectors.gallery_videos_tab, timeout=0.8):
+            _log(log, "debug", "[gallery] switched to Videos tab")
+            return True
+    return False
+
+
 def select_first_gallery_item(
     device,
     *,

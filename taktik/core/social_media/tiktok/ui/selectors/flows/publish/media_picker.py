@@ -34,6 +34,8 @@ class PublishMediaPickerSelectors:
         ":id/ir_",
         ":id/mub",
         ":id/nm8",
+        ":id/jn2",
+        ":id/viewpager_choose_media",
     ])
     _camera_creation_copy_markers: List[str] = field(default_factory=lambda: [
         "ajouter un son",
@@ -80,6 +82,16 @@ class PublishMediaPickerSelectors:
         has_camera_copy = any(marker.lower() in lowered_xml for marker in self._camera_creation_copy_markers)
         has_camera_controls = any(marker.lower() in lowered_xml for marker in self._camera_creation_control_markers)
         return has_camera_copy and has_camera_controls
+
+    @property
+    def gallery_videos_tab(self) -> List[str]:
+        return [
+            '//*[@text="Videos"]',
+            '//*[@text="Vidéos"]',
+            '//*[@text="Video"]',
+            '//*[contains(@content-desc, "Videos")]',
+            '//*[contains(@content-desc, "Vidéos")]',
+        ]
 
     @property
     def next_btn(self) -> List[str]:
